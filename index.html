@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estrutura de Crescimento</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: white;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      color: #00ff88;
+    }
+
+    .section {
+      margin: 40px 0;
+      padding: 20px;
+      border: 1px solid #1f1f1f;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .section:hover {
+      background: #111;
+    }
+
+    .content {
+      display: none;
+      margin-top: 15px;
+      color: #ccc;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #00ff88;
+      color: black;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Seu negócio não trava por falta de marketing</h1>
+    <p>Trava porque não está preparado para crescer</p>
+    <a href="#sobre" class="btn">Entenda como funciona</a>
+  </div>
+
+  <!-- PROBLEMA -->
+  <div class="section" onclick="toggle(this)">
+    <h2>O Problema</h2>
+    <div class="content">
+      <p>Você depende de você para tudo.</p>
+      <p>Já contratou e não deu certo.</p>
+      <p>Tem medo de crescer e perder qualidade.</p>
+      <p>Marketing sozinho não resolve.</p>
+    </div>
+  </div>
+
+  <!-- QUEBRA -->
+  <div class="section" onclick="toggle(this)">
+    <h2>A Verdade</h2>
+    <div class="content">
+      <p>O problema não é falta de clientes.</p>
+      <p>É falta de estrutura para crescer com pessoas.</p>
+    </div>
+  </div>
+
+  <!-- POSICIONAMENTO -->
+  <div class="section" onclick="toggle(this)">
+    <h2>O Que Eu Faço</h2>
+    <div class="content">
+      <p>Não sou agência.</p>
+      <p>Não sou consultoria.</p>
+      <p>Não sou RH terceirizado.</p>
+      <p>Eu estruturo crescimento real.</p>
+    </div>
+  </div>
+
+  <!-- DIFERENCIAL -->
+  <div class="section" onclick="toggle(this)">
+    <h2>Diferencial</h2>
+    <div class="content">
+      <p>Estratégia de crescimento</p>
+      <p>Marketing aplicado</p>
+      <p
