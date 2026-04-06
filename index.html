@@ -1,267 +1,327 @@
-<!DOCTYPE html>
+[17:39, 06/04/2026] Meu Cel: <!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Estrutura de Crescimento</title>
+<title>Estrutura P5</title>
 
 <style>
-* {
+body {
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Arial', sans-serif;
+  background: radial-gradient(circle at top, #001a00, #000);
+  color: #fff;
 }
 
+section {
+  padding: 80px 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+h1, h2, h3 {
+  color: #00ff88;
+}
+
+h1 {
+  font-size: 42px;
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 16px;
+  color: #aaa;
+  margin-top: -10px;
+}
+
+button {
+  background: linear-gradient(90deg, #00ff88, #00cc66);
+  border: none;
+  padding: 15px 30px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #000;
+  transition: 0.3s;
+}
+
+button:hove…
+[17:44, 06/04/2026] Meu Cel: <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estrutura P5</title>
+
+<style>
 body {
-  background: #0a0a0a;
-  color: white;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #001a00, #000);
+  color: #fff;
   overflow-x: hidden;
 }
 
 section {
-  min-height: 100vh;
   padding: 80px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  max-width: 1100px;
+  margin: auto;
+}
+
+h1, h2, h3 {
+  color: #00ff88;
+  text-shadow: 0 0 10px rgba(0,255,136,0.6);
 }
 
 h1 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
+  font-size: 48px;
+  text-align: center;
 }
 
-h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
+.subtitle {
+  text-align: center;
+  font-size: 18px;
+  color: #aaa;
 }
 
-p {
-  max-width: 800px;
-  opacity: 0.8;
-  line-height: 1.6;
-}
-
-.button {
-  margin-top: 30px;
+button {
+  background: linear-gradient(90deg, #00ff88, #00cc66);
+  border: none;
   padding: 15px 30px;
-  border: 1px solid #00ff88;
-  color: #00ff88;
-  background: transparent;
+  border-radius: 8px;
   cursor: pointer;
+  color: #000;
   transition: 0.3s;
 }
 
-.button:hover {
-  background: #00ff88;
-  color: black;
+button:hover {
+  transform: scale(1.05);
   box-shadow: 0 0 20px #00ff88;
 }
 
-.glow {
-  color: #00ff88;
-  text-shadow: 0 0 10px #00ff88;
-}
-
 .card {
-  margin: 10px;
+  background: rgba(0,255,136,0.05);
+  border: 1px solid rgba(0,255,136,0.2);
   padding: 20px;
-  border: 1px solid #222;
-  border-radius: 10px;
-  max-width: 600px;
+  margin: 15px 0;
+  border-radius: 12px;
   transition: 0.3s;
 }
 
 .card:hover {
-  border-color: #00ff88;
-  box-shadow: 0 0 20px rgba(0,255,136,0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(0,255,136,0.4);
 }
 
-.fade {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: 0.8s;
+.grid {
+  display: grid;
+  gap: 20px;
 }
 
-.fade.show {
-  opacity: 1;
-  transform: translateY(0);
+@media(min-width: 768px){
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- HERO -->
-<section class="fade">
-  <h1 class="glow">Seu negócio não trava por falta de marketing.</h1>
-  <h1>Trava porque não está preparado para crescer.</h1>
+<section>
+  <h1>Estrutura P5</h1>
+  <div class="subtitle">"Estruturando seu negócio"</div>
 
-  <p>Eu ajudo empresas a crescer estruturando marketing e pessoas — sem perder a essência do negócio.</p>
-
-  <button class="button" onclick="scrollToSection(1)">Entenda como funciona</button>
-</section>
-
-<!-- PROBLEMA -->
-<section class="fade">
-  <h2 class="glow">O problema</h2>
-
-  <div class="card">Você sabe que pode crescer, mas tudo ainda depende de você</div>
-  <div class="card">Já contratou pessoas, mas elas não sustentaram o seu padrão</div>
-  <div class="card">Você tem medo de crescer e perder qualidade</div>
-  <div class="card">Marketing sozinho não resolve o seu problema</div>
-</section>
-
-<!-- QUEBRA -->
-<section class="fade">
-  <h2 class="glow">Quebra de crença</h2>
-  <p>O problema não é falta de clientes.<br><br>
-  O problema é que sua empresa não está preparada para crescer com pessoas.</p>
-</section>
-
-<!-- POSICIONAMENTO -->
-<section class="fade">
-  <h2 class="glow">Posicionamento</h2>
-
-  <p>
-  Isso não é uma agência.<br>
-  Isso não é uma consultoria tradicional.<br>
-  E também não é um serviço de RH terceirizado.<br><br>
-
-  É um modelo de crescimento que integra estratégia, marketing e estrutura humana.
-  </p>
-</section>
-
-<!-- DIFERENCIAL -->
-<section class="fade">
-  <h2 class="glow">O que torna isso diferente</h2>
-
-  <div class="card">Estratégia de crescimento baseada em aquisição, engajamento, monetização e retenção</div>
-  <div class="card">Estruturação de pessoas</div>
-  <div class="card">Psicologia aplicada ao comportamento profissional</div>
-  <div class="card">Implementação prática (não apenas teoria)</div>
-</section>
-
-<!-- AUTORIDADE -->
-<section class="fade">
-  <h2 class="glow">Autoridade</h2>
-
-  <p>
-  Baseado em formação em Psicologia (10º período)<br><br>
-
-  Aplicação real de comportamento humano<br><br>
-
-  Capacidade de atuar diretamente na estrutura de contratação, adaptação e desenvolvimento de pessoas
+  <p style="text-align:center; margin-top:30px;">
+    Você não precisa de mais clientes.<br>
+    Você precisa de estrutura para crescer.
   </p>
 
-  <br>
-
-  <div class="card">Definir o perfil certo</div>
-  <div class="card">Evitar erros de contratação</div>
-  <div class="card">Estruturar pessoas para performar</div>
+  <div style="text-align:center;">
+    <button onclick="scrollToSection('servico')">Entender como funciona</button>
+  </div>
 </section>
 
-<!-- COMO FUNCIONA -->
-<section class="fade">
-  <h2 class="glow">Como funciona</h2>
+<section id="servico">
+<h2>🔧 Execução do Serviço (Funcionário)</h2>
 
-  <div class="card">1. Diagnóstico do negócio</div>
-  <div class="card">2. Identificação de gargalos</div>
-  <div class="card">3. Estruturação do crescimento</div>
-  <div class="card">4. Definição do perfil ideal</div>
-  <div class="card">5. Apoio na contratação</div>
-  <div class="card">6. Direcionamento e adaptação</div>
-  <div class="card">7. Acompanhamento estratégico</div>
+<div class="card">
+<h3>Modelo de Vaga</h3>
+<p>Captação de candidatos alinhados com responsabilidade, comunicação e crescimento.</p>
+</div>
+
+<div class="card">
+<h3>Triagem</h3>
+<p>Perguntas estratégicas para filtrar comportamento e mentalidade.</p>
+</div>
+
+<div class="card">
+<h3>Entrevista</h3>
+<p>Avaliação de clareza, responsabilidade e reação sob pressão.</p>
+</div>
+
+<div class="card">
+<h3>Avaliação</h3>
+<p>Comunicação + Responsabilidade + Vontade (mínimo 20 pontos).</p>
+</div>
+
+<div class="card">
+<h3>Treinamento</h3>
+<p>5 dias de imersão completa: cultura, produto, cliente e operação.</p>
+</div>
+
+<div class="card">
+<p><strong>“Você representa a empresa, não só executa tarefas.”</strong></p>
+</div>
 </section>
 
-<!-- RESULTADO -->
-<section class="fade">
-  <h2 class="glow">Resultado</h2>
+<section>
+<h2>🚀 Máquina de Crescimento (P5)</h2>
 
-  <p>
-  Você deixa de ser o gargalo.<br><br>
-  Sua empresa cresce com consistência.<br><br>
-  E as pessoas passam a sustentar o crescimento.
-  </p>
+<div class="grid grid-2">
+
+<div class="card">
+<h3>1. Estruturação</h3>
+<p>Organizar base da empresa e preparar pessoas para sustentar crescimento.</p>
+</div>
+
+<div class="card">
+<h3>2. Aquisição</h3>
+<p>Gerar demanda qualificada com posicionamento estratégico.</p>
+</div>
+
+<div class="card">
+<h3>3. Qualificação</h3>
+<p>Filtrar empresas com dor real e intenção de crescimento.</p>
+</div>
+
+<div class="card">
+<h3>4. Conversão</h3>
+<p>Transformar conversa em resultado com proposta baseada em performance.</p>
+</div>
+
+<div class="card">
+<h3>5. Retenção</h3>
+<p>Acompanhamento contínuo para evolução e melhoria constante.</p>
+</div>
+
+</div>
 </section>
 
-<!-- OFERTA -->
-<section class="fade">
-  <h2 class="glow">Primeiro passo</h2>
+<section>
+<h2>🎯 Posicionamento</h2>
 
-  <p>
-  Diagnóstico estratégico:<br><br>
+<div class="card">
+❌ Não é marketing<br>
+❌ Não é recrutamento<br>
+❌ Não é consultoria
+</div>
 
-  • Análise do negócio<br>
-  • Identificação dos erros<br>
-  • Clareza sobre o que impede a escala<br>
-  • Direcionamento prático
-  </p>
+<div class="card">
+✔ É estrutura de crescimento real
+</div>
 </section>
 
-<!-- PARA QUEM -->
-<section class="fade">
-  <h2 class="glow">Para quem é</h2>
+<section>
+<h2>📢 Aquisição (Criativos)</h2>
 
-  <div class="card">3 a 20 funcionários</div>
-  <div class="card">Faturamento entre 10k e 100k</div>
-  <div class="card">Já tentou contratar e falhou</div>
-  <div class="card">Dificuldade de crescimento</div>
-  <div class="card">Depende do dono</div>
+<div class="card">"Você quer crescer, mas tudo ainda depende de você?"</div>
+<div class="card">"Já contratou e deu errado?"</div>
+<div class="card">"O problema não é cliente. É falta de estrutura."</div>
+<div class="card">"Eu estruturo empresas para crescer com pessoas."</div>
+
 </section>
 
-<!-- NÃO É -->
-<section class="fade">
-  <h2 class="glow">Para quem não é</h2>
+<section>
+<h2>❤️ Qualificação</h2>
 
-  <div class="card">Empresas muito grandes</div>
-  <div class="card">Sem faturamento</div>
-  <div class="card">Não querem mudar</div>
+<div class="card">Hoje, o que mais trava o crescimento da sua empresa?</div>
+<div class="card">Você já tentou contratar antes? Como foi?</div>
+<div class="card">Hoje você quer crescer ou só manter?</div>
+
 </section>
 
-<!-- OBJEÇÕES -->
-<section class="fade">
-  <h2 class="glow">Objeções</h2>
+<section>
+<h2>💰 Conversão</h2>
 
-  <div class="card">Isso não é custo, é evitar prejuízo</div>
-  <div class="card">Se já funcionasse, você já teria crescido</div>
-  <div class="card">O mercado resolve partes — aqui resolve o todo</div>
+<div class="card">
+O problema não é cliente.<br>
+É que sua empresa não está estruturada para crescer com pessoas.
+</div>
+
+<div class="card">
+- Encontrar a pessoa certa<br>
+- Treinar essa pessoa<br>
+- Estruturar operação<br>
+- Escalar com clientes<br><br>
+
+Você só paga quando isso acontece de verdade.
+</div>
 </section>
 
-<!-- FINAL -->
-<section class="fade">
-  <h2 class="glow">Diferencial</h2>
+<section>
+<h2>🔁 Retenção</h2>
 
-  <p>
-  Não entrego marketing.<br>
-  Não entrego currículo.<br><br>
+<div class="card">
+Como está o desempenho?<br>
+Algo que podemos melhorar?
+</div>
 
-  Estruturo crescimento real.
-  </p>
+</section>
 
-  <button class="button">Conversar sobre meu negócio</button>
+<section>
+<h2>👥 Operação</h2>
+
+<div class="grid grid-2">
+
+<div class="card">
+<h3>Você</h3>
+<p>Estratégia, fechamento, treinamento e crescimento.</p>
+</div>
+
+<div class="card">
+<h3>Sua Esposa</h3>
+<p>Contato inicial, qualificação, organização e follow-up.</p>
+</div>
+
+</div>
+</section>
+
+<section>
+<h2>📊 Sistema</h2>
+
+<div class="card">1 cliente → validação</div>
+<div class="card">2–3 clientes → ajuste</div>
+<div class="card">4+ clientes → previsibilidade</div>
+</section>
+
+<section>
+<h2>🔥 Frases-chave</h2>
+
+<div class="card">Você não precisa de mais cliente. Precisa de estrutura.</div>
+<div class="card">Eu não vendo marketing. Eu estruturo crescimento.</div>
+<div class="card">Sem estrutura, crescer quebra sua empresa.</div>
+
+</section>
+
+<section>
+<h2>🚀 Resultado</h2>
+
+<div class="card">
+Estrutura + Pessoas + Crescimento + Clientes
+</div>
+
+<div style="text-align:center;">
+<button>Conversar sobre meu negócio</button>
+</div>
+
 </section>
 
 <script>
-function scrollToSection(index) {
-  document.querySelectorAll("section")[index].scrollIntoView({
-    behavior: "smooth"
-  });
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
 }
-
-// animação
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if(entry.isIntersecting){
-      entry.target.classList.add("show");
-    }
-  });
-});
-
-document.querySelectorAll(".fade").forEach(el => observer.observe(el));
 </script>
 
 </body>
