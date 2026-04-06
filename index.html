@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+[12:05, 06/04/2026] Meu Cel: <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -109,3 +109,40 @@
       <p>Estratégia de crescimento</p>
       <p>Marketing aplicado</p>
       <p
+[12:32, 06/04/2026] Meu Cel: <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projeto</title>
+
+<style>
+body { background:#0a0a0a; color:white; font-family:Arial; }
+.section { border:1px solid #222; padding:20px; margin:20px; cursor:pointer; }
+.content { display:none; }
+</style>
+</head>
+
+<body>
+
+<div class="section">
+<h2>O Problema</h2>
+<div class="content">Você depende de você para tudo.</div>
+</div>
+
+<div class="section">
+<h2>A Verdade</h2>
+<div class="content">Sua empresa não está preparada para crescer.</div>
+</div>
+
+<script>
+document.querySelectorAll(".section").forEach(section => {
+  section.addEventListener("click", () => {
+    const content = section.querySelector(".content");
+    content.style.display = content.style.display === "block" ? "none" : "block";
+  });
+});
+</script>
+
+</body>
+</html>
