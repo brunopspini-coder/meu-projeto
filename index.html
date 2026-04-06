@@ -1,147 +1,267 @@
-[12:05, 06/04/2026] Meu Cel: <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estrutura de Crescimento</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0a0a0a;
-      color: white;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 20px;
-    }
-
-    h1, h2 {
-      color: #00ff88;
-    }
-
-    .section {
-      margin: 40px 0;
-      padding: 20px;
-      border: 1px solid #1f1f1f;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .section:hover {
-      background: #111;
-    }
-
-    .content {
-      display: none;
-      margin-top: 15px;
-      color: #ccc;
-    }
-
-    .btn {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 20px;
-      background: #00ff88;
-      color: black;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 60px 20px;
-    }
-  </style>
-</head>
-
-<body>
-
-<div class="container">
-
-  <!-- HERO -->
-  <div class="hero">
-    <h1>Seu negócio não trava por falta de marketing</h1>
-    <p>Trava porque não está preparado para crescer</p>
-    <a href="#sobre" class="btn">Entenda como funciona</a>
-  </div>
-
-  <!-- PROBLEMA -->
-  <div class="section" onclick="toggle(this)">
-    <h2>O Problema</h2>
-    <div class="content">
-      <p>Você depende de você para tudo.</p>
-      <p>Já contratou e não deu certo.</p>
-      <p>Tem medo de crescer e perder qualidade.</p>
-      <p>Marketing sozinho não resolve.</p>
-    </div>
-  </div>
-
-  <!-- QUEBRA -->
-  <div class="section" onclick="toggle(this)">
-    <h2>A Verdade</h2>
-    <div class="content">
-      <p>O problema não é falta de clientes.</p>
-      <p>É falta de estrutura para crescer com pessoas.</p>
-    </div>
-  </div>
-
-  <!-- POSICIONAMENTO -->
-  <div class="section" onclick="toggle(this)">
-    <h2>O Que Eu Faço</h2>
-    <div class="content">
-      <p>Não sou agência.</p>
-      <p>Não sou consultoria.</p>
-      <p>Não sou RH terceirizado.</p>
-      <p>Eu estruturo crescimento real.</p>
-    </div>
-  </div>
-
-  <!-- DIFERENCIAL -->
-  <div class="section" onclick="toggle(this)">
-    <h2>Diferencial</h2>
-    <div class="content">
-      <p>Estratégia de crescimento</p>
-      <p>Marketing aplicado</p>
-      <p
-[12:32, 06/04/2026] Meu Cel: <!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Projeto</title>
+<title>Estrutura de Crescimento</title>
 
 <style>
-body { background:#0a0a0a; color:white; font-family:Arial; }
-.section { border:1px solid #222; padding:20px; margin:20px; cursor:pointer; }
-.content { display:none; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: #0a0a0a;
+  color: white;
+  overflow-x: hidden;
+}
+
+section {
+  min-height: 100vh;
+  padding: 80px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+p {
+  max-width: 800px;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.button {
+  margin-top: 30px;
+  padding: 15px 30px;
+  border: 1px solid #00ff88;
+  color: #00ff88;
+  background: transparent;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.button:hover {
+  background: #00ff88;
+  color: black;
+  box-shadow: 0 0 20px #00ff88;
+}
+
+.glow {
+  color: #00ff88;
+  text-shadow: 0 0 10px #00ff88;
+}
+
+.card {
+  margin: 10px;
+  padding: 20px;
+  border: 1px solid #222;
+  border-radius: 10px;
+  max-width: 600px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  border-color: #00ff88;
+  box-shadow: 0 0 20px rgba(0,255,136,0.2);
+}
+
+.fade {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.8s;
+}
+
+.fade.show {
+  opacity: 1;
+  transform: translateY(0);
+}
 </style>
 </head>
 
 <body>
 
-<div class="section">
-<h2>O Problema</h2>
-<div class="content">Você depende de você para tudo.</div>
-</div>
+<!-- HERO -->
+<section class="fade">
+  <h1 class="glow">Seu negócio não trava por falta de marketing.</h1>
+  <h1>Trava porque não está preparado para crescer.</h1>
 
-<div class="section">
-<h2>A Verdade</h2>
-<div class="content">Sua empresa não está preparada para crescer.</div>
-</div>
+  <p>Eu ajudo empresas a crescer estruturando marketing e pessoas — sem perder a essência do negócio.</p>
+
+  <button class="button" onclick="scrollToSection(1)">Entenda como funciona</button>
+</section>
+
+<!-- PROBLEMA -->
+<section class="fade">
+  <h2 class="glow">O problema</h2>
+
+  <div class="card">Você sabe que pode crescer, mas tudo ainda depende de você</div>
+  <div class="card">Já contratou pessoas, mas elas não sustentaram o seu padrão</div>
+  <div class="card">Você tem medo de crescer e perder qualidade</div>
+  <div class="card">Marketing sozinho não resolve o seu problema</div>
+</section>
+
+<!-- QUEBRA -->
+<section class="fade">
+  <h2 class="glow">Quebra de crença</h2>
+  <p>O problema não é falta de clientes.<br><br>
+  O problema é que sua empresa não está preparada para crescer com pessoas.</p>
+</section>
+
+<!-- POSICIONAMENTO -->
+<section class="fade">
+  <h2 class="glow">Posicionamento</h2>
+
+  <p>
+  Isso não é uma agência.<br>
+  Isso não é uma consultoria tradicional.<br>
+  E também não é um serviço de RH terceirizado.<br><br>
+
+  É um modelo de crescimento que integra estratégia, marketing e estrutura humana.
+  </p>
+</section>
+
+<!-- DIFERENCIAL -->
+<section class="fade">
+  <h2 class="glow">O que torna isso diferente</h2>
+
+  <div class="card">Estratégia de crescimento baseada em aquisição, engajamento, monetização e retenção</div>
+  <div class="card">Estruturação de pessoas</div>
+  <div class="card">Psicologia aplicada ao comportamento profissional</div>
+  <div class="card">Implementação prática (não apenas teoria)</div>
+</section>
+
+<!-- AUTORIDADE -->
+<section class="fade">
+  <h2 class="glow">Autoridade</h2>
+
+  <p>
+  Baseado em formação em Psicologia (10º período)<br><br>
+
+  Aplicação real de comportamento humano<br><br>
+
+  Capacidade de atuar diretamente na estrutura de contratação, adaptação e desenvolvimento de pessoas
+  </p>
+
+  <br>
+
+  <div class="card">Definir o perfil certo</div>
+  <div class="card">Evitar erros de contratação</div>
+  <div class="card">Estruturar pessoas para performar</div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="fade">
+  <h2 class="glow">Como funciona</h2>
+
+  <div class="card">1. Diagnóstico do negócio</div>
+  <div class="card">2. Identificação de gargalos</div>
+  <div class="card">3. Estruturação do crescimento</div>
+  <div class="card">4. Definição do perfil ideal</div>
+  <div class="card">5. Apoio na contratação</div>
+  <div class="card">6. Direcionamento e adaptação</div>
+  <div class="card">7. Acompanhamento estratégico</div>
+</section>
+
+<!-- RESULTADO -->
+<section class="fade">
+  <h2 class="glow">Resultado</h2>
+
+  <p>
+  Você deixa de ser o gargalo.<br><br>
+  Sua empresa cresce com consistência.<br><br>
+  E as pessoas passam a sustentar o crescimento.
+  </p>
+</section>
+
+<!-- OFERTA -->
+<section class="fade">
+  <h2 class="glow">Primeiro passo</h2>
+
+  <p>
+  Diagnóstico estratégico:<br><br>
+
+  • Análise do negócio<br>
+  • Identificação dos erros<br>
+  • Clareza sobre o que impede a escala<br>
+  • Direcionamento prático
+  </p>
+</section>
+
+<!-- PARA QUEM -->
+<section class="fade">
+  <h2 class="glow">Para quem é</h2>
+
+  <div class="card">3 a 20 funcionários</div>
+  <div class="card">Faturamento entre 10k e 100k</div>
+  <div class="card">Já tentou contratar e falhou</div>
+  <div class="card">Dificuldade de crescimento</div>
+  <div class="card">Depende do dono</div>
+</section>
+
+<!-- NÃO É -->
+<section class="fade">
+  <h2 class="glow">Para quem não é</h2>
+
+  <div class="card">Empresas muito grandes</div>
+  <div class="card">Sem faturamento</div>
+  <div class="card">Não querem mudar</div>
+</section>
+
+<!-- OBJEÇÕES -->
+<section class="fade">
+  <h2 class="glow">Objeções</h2>
+
+  <div class="card">Isso não é custo, é evitar prejuízo</div>
+  <div class="card">Se já funcionasse, você já teria crescido</div>
+  <div class="card">O mercado resolve partes — aqui resolve o todo</div>
+</section>
+
+<!-- FINAL -->
+<section class="fade">
+  <h2 class="glow">Diferencial</h2>
+
+  <p>
+  Não entrego marketing.<br>
+  Não entrego currículo.<br><br>
+
+  Estruturo crescimento real.
+  </p>
+
+  <button class="button">Conversar sobre meu negócio</button>
+</section>
 
 <script>
-document.querySelectorAll(".section").forEach(section => {
-  section.addEventListener("click", () => {
-    const content = section.querySelector(".content");
-    content.style.display = content.style.display === "block" ? "none" : "block";
+function scrollToSection(index) {
+  document.querySelectorAll("section")[index].scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+// animação
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add("show");
+    }
   });
 });
+
+document.querySelectorAll(".fade").forEach(el => observer.observe(el));
 </script>
 
 </body>
