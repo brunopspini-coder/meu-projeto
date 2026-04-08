@@ -305,9 +305,9 @@
         <p>Central interativa com segmentos, objeções, respostas rápidas e navegação por camada de decisão.</p><p style="margin-top:8px;color:#ffd1d1;"><strong>Versão evoluída:</strong> fluxo completo de Varejo B2B com 4 objeções aprofundadas + botão para abrir direto o fluxo da objeção atual.</p>
 
         <div class="stats">
-          <div class="stat"><span class="stat-label">Segmentos</span><b id="statSegmentos">6</b></div>
-          <div class="stat"><span class="stat-label">Objeções</span><b id="statObjecoes">60</b></div>
-          <div class="stat"><span class="stat-label">Fluxos</span><b id="statFluxos">6</b></div>
+          <div class="stat"><span class="stat-label">Segmentos</span><b id="statSegmentos">7</b></div>
+          <div class="stat"><span class="stat-label">Objeções</span><b id="statObjecoes">68</b></div>
+          <div class="stat"><span class="stat-label">Fluxos</span><b id="statFluxos">7</b></div>
         </div>
       </div>
 
@@ -321,6 +321,7 @@
       <button id="btn-objecoes" class="tab-btn active" onclick="trocarTab('objecoes')">Objeções</button>
       <button id="btn-camadas" class="tab-btn" onclick="trocarTab('camadas')">Sistema de Camadas</button>
       <button id="btn-rapidas" class="tab-btn" onclick="trocarTab('rapidas')">Respostas Rápidas</button>
+      <button id="btn-relatorios" class="tab-btn" onclick="trocarTab('relatorios')">Relatórios</button>
     </div>
 
     <div id="objecoesTab" class="card">
@@ -369,6 +370,22 @@
 
     <div id="rapidasTab" class="card" style="display:none;">
       <div class="quick-grid" id="quickGrid"></div>
+    </div>
+
+    <div id="relatoriosTab" class="card" style="display:none;">
+      <div class="block">
+        <div class="mini-label">Sistema de relatórios</div>
+        <div class="quote" style="font-size:20px;">Tudo que você clicar nas objeções do fluxo fica registrado aqui.</div>
+        <p>Ao final, é só copiar e colar onde quiser.</p>
+      </div>
+      <div class="actions-row">
+        <button class="copy-btn" onclick="copiarRelatorio()">Copiar relatório</button>
+        <button class="copy-btn" onclick="atualizarRelatorio()">Atualizar relatório</button>
+        <button class="back-btn" onclick="limparRelatorio()">Limpar relatório</button>
+      </div>
+      <div class="block" style="margin-top:16px;">
+        <div class="script-box" id="relatorioBox" style="white-space:pre-wrap; min-height:320px;"></div>
+      </div>
     </div>
   </div>
 
@@ -472,7 +489,21 @@
           { leadResponse: 'Já tenho agência', leitura: 'Pode haver operação ativa, mas sem diagnóstico do funil.', objetivo: 'Questionar gargalo real.', script: ['Perfeito. O ponto não é ter agência, é saber se hoje isso vira oportunidade de verdade ou só volume.'] }
         ]
       }
-    };
+    ,
+      'Restaurantes': {
+        B2B: [
+          { leadResponse: 'Aqui já enche', leitura: 'Tem validação de demanda, mas pode faltar distribuição ao longo do dia e eficiência por hora.', objetivo: 'Mostrar que crescer pode significar distribuir melhor a demanda e aumentar faturamento por cliente.', script: ['Top. E isso acontece o dia inteiro ou mais concentrado em horários específicos?'] },
+          { leadResponse: 'Meu foco é manter qualidade, não crescer', leitura: 'Associa crescimento a perda de padrão operacional.', objetivo: 'Separar crescimento desorganizado de crescimento com controle.', script: ['Perfeito. E crescer hoje significa perder qualidade… ou você nunca estruturou crescimento com controle?'] },
+          { leadResponse: 'Já tenho agência', leitura: 'Existe marketing rodando, mas pode faltar conexão direta com movimento real e faturamento.', objetivo: 'Conectar presença e campanhas com ocupação, fluxo e caixa.', script: ['Perfeito. E hoje ela te ajuda a encher fora do pico ou mais a manter presença?'] },
+          { leadResponse: 'Já estou satisfeito com o faturamento', leitura: 'Está confortável com o volume atual, mas pode estar deixando margem e eficiência na mesa.', objetivo: 'Virar a conversa de volume para margem, ticket médio e recorrência.', script: ['Perfeito. E esse faturamento vem com margem saudável ou ainda tem custo escondido aí?'] }
+        ],
+        B2C: [
+          { leadResponse: 'Aqui já enche', leitura: 'Tem validação de demanda, mas pode faltar distribuição ao longo do dia e eficiência por hora.', objetivo: 'Mostrar que crescer pode significar distribuir melhor a demanda e aumentar faturamento por cliente.', script: ['Top. E isso acontece o dia inteiro ou mais concentrado em horários específicos?'] },
+          { leadResponse: 'Meu foco é manter qualidade, não crescer', leitura: 'Associa crescimento a perda de padrão operacional.', objetivo: 'Separar crescimento desorganizado de crescimento com controle.', script: ['Perfeito. E crescer hoje significa perder qualidade… ou você nunca estruturou crescimento com controle?'] },
+          { leadResponse: 'Já tenho agência', leitura: 'Existe marketing rodando, mas pode faltar conexão direta com movimento real e faturamento.', objetivo: 'Conectar presença e campanhas com ocupação, fluxo e caixa.', script: ['Perfeito. E hoje ela te ajuda a encher fora do pico ou mais a manter presença?'] },
+          { leadResponse: 'Já estou satisfeito com o faturamento', leitura: 'Está confortável com o volume atual, mas pode estar deixando margem e eficiência na mesa.', objetivo: 'Virar a conversa de volume para margem, ticket médio e recorrência.', script: ['Perfeito. E esse faturamento vem com margem saudável ou ainda tem custo escondido aí?'] }
+        ]
+      }};
 
     const respostasRapidas = [
       { titulo: 'Desligou na apresentação', leitura: 'Foi rejeição à interrupção, não necessariamente à oferta.', texto: 'Fala, [nome]. Te liguei agora há pouco e prometo ser objetivo. Não era venda no susto — era só pra entender se faz sentido te mostrar um diagnóstico rápido do teu processo comercial.' },
@@ -484,7 +515,7 @@
       const itens = playbook[segmento][perfil];
       const flow = {
         inicio: {
-          pergunta: 'Qual dessas falas o lead trouxe?',
+          pergunta: 'Cara, vou ser bem direto contigo pra não te tomar tempo — não é ligação aleatória. Como vocês fazem o trabalho de divulgação?\n\nQual dessas falas o lead trouxe?',
           opcoes: itens.map((item, index) => ({ texto: item.leadResponse, proximo: `obj${index + 1}` }))
         }
       };
@@ -525,12 +556,16 @@
         B2B: createGenericFlow('Indústria / Distribuição', 'B2B'),
         B2C: createGenericFlow('Indústria / Distribuição', 'B2C')
       }
-    };
+    
+      , 'Restaurantes': {
+        B2B: createGenericFlow('Restaurantes', 'B2B'),
+        B2C: createGenericFlow('Restaurantes', 'B2C')
+      }};
 
     // ===== FLUXO COMPLETO PEDIDO PELO USUÁRIO: VAREJO > B2B > JÁ TENHO AGÊNCIA =====
     Object.assign(fluxos['Varejo'].B2B, {
       inicio: {
-        pergunta: 'Qual dessas falas o lead trouxe?',
+        pergunta: 'Cara, vou ser bem direto contigo pra não te tomar tempo — não é ligação aleatória. Como vocês fazem o trabalho de divulgação?\n\nQual dessas falas o lead trouxe?',
         opcoes: [
           { texto: 'Já vendo bem no boca a boca', proximo: 'bb_inicio' },
           { texto: 'Tráfego não funciona pra mim', proximo: 'tf_inicio' },
@@ -2093,7 +2128,7 @@
 
     Object.assign(fluxos['E-commerce'].B2B, {
       inicio: {
-        pergunta: 'Qual dessas falas o lead trouxe?',
+        pergunta: 'Cara, vou ser bem direto contigo pra não te tomar tempo — não é ligação aleatória. Como vocês fazem o trabalho de divulgação?\n\nQual dessas falas o lead trouxe?',
         opcoes: [
           { texto: 'Já tenho tráfego rodando', proximo: 'ec_t_inicio' },
           { texto: 'Meu ROAS tá bom', proximo: 'ec_r_inicio' },
@@ -2534,11 +2569,98 @@
       document.getElementById('objecoesTab').style.display = 'none';
       document.getElementById('camadasTab').style.display = 'none';
       document.getElementById('rapidasTab').style.display = 'none';
+      document.getElementById('relatoriosTab').style.display = 'none';
       document.getElementById('btn-objecoes').classList.remove('active');
       document.getElementById('btn-camadas').classList.remove('active');
       document.getElementById('btn-rapidas').classList.remove('active');
+      document.getElementById('btn-relatorios').classList.remove('active');
       document.getElementById(tab + 'Tab').style.display = 'block';
       document.getElementById('btn-' + tab).classList.add('active');
+      if (tab === 'relatorios') atualizarRelatorio();
+    }
+
+
+    const RELATORIO_STORAGE_KEY = 'sdr_playbook_relatorio_v1';
+    let relatorioCliques = [];
+
+    function carregarRelatorio() {
+      try {
+        relatorioCliques = JSON.parse(localStorage.getItem(RELATORIO_STORAGE_KEY) || '[]');
+      } catch (e) {
+        relatorioCliques = [];
+      }
+    }
+
+    function salvarRelatorio() {
+      localStorage.setItem(RELATORIO_STORAGE_KEY, JSON.stringify(relatorioCliques));
+    }
+
+    function registrarCliqueFluxo(etapaAtual, respostaEscolhida, proximaEtapa) {
+      const node = fluxos[segmentoAtual]?.[perfilAtual]?.[etapaAtual];
+      relatorioCliques.push({
+        tipo: 'clique',
+        data: new Date().toLocaleString('pt-BR'),
+        segmento: segmentoAtual,
+        perfil: perfilAtual,
+        etapa: etapaAtual,
+        pergunta: node?.pergunta || '',
+        resposta: respostaEscolhida,
+        proximaEtapa
+      });
+      salvarRelatorio();
+    }
+
+    function registrarResultadoFluxo(etapaAtual) {
+      const node = fluxos[segmentoAtual]?.[perfilAtual]?.[etapaAtual];
+      if (!node || !node.resultado) return;
+      const ultimo = relatorioCliques[relatorioCliques.length - 1];
+      if (ultimo && ultimo.tipo === 'resultado' && ultimo.segmento === segmentoAtual && ultimo.perfil === perfilAtual && ultimo.etapa === etapaAtual) return;
+      relatorioCliques.push({
+        tipo: 'resultado',
+        data: new Date().toLocaleString('pt-BR'),
+        segmento: segmentoAtual,
+        perfil: perfilAtual,
+        etapa: etapaAtual,
+        resultado: node.resultado,
+        texto: node.texto
+      });
+      salvarRelatorio();
+    }
+
+    function gerarTextoRelatorio() {
+      if (!relatorioCliques.length) {
+        return 'Nenhum clique registrado ainda.';
+      }
+      let linhas = ['RELATÓRIO DE OBJEÇÕES', ''];
+      relatorioCliques.forEach((item, i) => {
+        linhas.push(`${i + 1}. [${item.data}] ${item.segmento} • ${item.perfil}`);
+        if (item.tipo === 'clique') {
+          linhas.push(`Pergunta: ${item.pergunta}`);
+          linhas.push(`Resposta clicada: ${item.resposta}`);
+        } else {
+          linhas.push(`Resultado: ${item.resultado}`);
+          linhas.push(`Texto final: ${item.texto}`);
+        }
+        linhas.push('');
+      });
+      return linhas.join('\n');
+    }
+
+    function atualizarRelatorio() {
+      const box = document.getElementById('relatorioBox');
+      if (box) box.textContent = gerarTextoRelatorio();
+    }
+
+    function copiarRelatorio() {
+      const texto = gerarTextoRelatorio();
+      navigator.clipboard.writeText(texto).then(() => mostrarToast('Relatório copiado'));
+    }
+
+    function limparRelatorio() {
+      relatorioCliques = [];
+      salvarRelatorio();
+      atualizarRelatorio();
+      mostrarToast('Relatório limpo');
     }
 
     function renderPerfilChips() {
@@ -2627,13 +2749,19 @@
       }
       if (segmentoAtual === 'Indústria / Distribuição' && perfilAtual === 'B2B') {
         const mapa = {
-          'Isso não funciona no meu mercado': 'id_m_inicio',
-          'Meu cliente não está na internet': 'id_i_inicio',
-          'Venda aqui é relacionamento': 'id_r_inicio',
-          'Lead digital não qualifica': 'id_l_inicio',
-          'Já tenho agência': 'id_ag_inicio'
+          'Isso não funciona no meu mercado': 'in_m_inicio',
+          'Meu cliente não está na internet': 'in_c_inicio',
+          'Venda aqui é relacionamento': 'in_r_inicio',
+          'Lead digital não qualifica': 'in_l_inicio',
+          'Já tenho agência': 'in_ag_inicio'
         };
         return mapa[item.leadResponse] || 'inicio';
+      }
+      const fluxoInicio = fluxos[segmentoAtual]?.[perfilAtual]?.inicio;
+      if (item?.proximo) return item.proximo;
+      if (fluxoInicio?.opcoes?.length) {
+        const opcao = fluxoInicio.opcoes.find(op => op.texto === item.leadResponse);
+        if (opcao?.proximo) return opcao.proximo;
       }
       return 'inicio';
     }
@@ -2651,7 +2779,7 @@
     // ===== FLUXO COMPLETO PEDIDO PELO USUÁRIO: CLÍNICA / SAÚDE > B2B =====
     Object.assign(fluxos['Clínica / Saúde'].B2B, {
       inicio: {
-        pergunta: 'Qual dessas falas o lead trouxe?',
+        pergunta: 'Cara, vou ser bem direto contigo pra não te tomar tempo — não é ligação aleatória. Como vocês fazem o trabalho de divulgação?\n\nQual dessas falas o lead trouxe?',
         opcoes: [
           { texto: 'Não quero banalizar meu serviço', proximo: 'cs_bz_inicio' },
           { texto: 'Meu público é diferente', proximo: 'cs_pd_inicio' },
@@ -2868,7 +2996,7 @@
 
     Object.assign(fluxos['Indústria / Distribuição'].B2B, {
       inicio: {
-        pergunta: 'Qual dessas falas o lead trouxe?',
+        pergunta: 'Cara, vou ser bem direto contigo pra não te tomar tempo — não é ligação aleatória. Como vocês fazem o trabalho de divulgação?\n\nQual dessas falas o lead trouxe?',
         opcoes: [
           { texto: 'Isso não funciona no meu mercado', proximo: 'id_m_inicio' },
           { texto: 'Meu cliente não está na internet', proximo: 'id_i_inicio' },
@@ -3084,10 +3212,12 @@
     });
 
 
+    carregarRelatorio();
     renderPerfilChips();
       renderSegmentos();
       renderObjecao();
       renderFluxo('inicio');
+      atualizarRelatorio();
     }
 
     function trocarSegmento(segmento) {
@@ -3136,6 +3266,8 @@
       const el = document.getElementById('flowStep');
       if (!node) return;
       if (node.resultado) {
+        registrarResultadoFluxo(etapa);
+        atualizarRelatorio();
         el.innerHTML = `
           <div class="mini-label">${node.resultado} • ${segmentoAtual} • ${perfilAtual}</div>
           <div class="quote">${node.texto}</div>
@@ -3152,14 +3284,21 @@
         <div class="mini-label">Próxima pergunta • ${segmentoAtual} • ${perfilAtual}</div>
         <div class="quote">${node.pergunta}</div>
         <div class="decision-row">
-          ${node.opcoes.map(op => `<button class="decision-btn" onclick="renderFluxo('${op.proximo}')">${op.texto}</button>`).join('')}
+          ${node.opcoes.map(op => `<button class="decision-btn" data-atual="${etapa}" data-proximo="${op.proximo}">${op.texto}</button>`).join('')}
         </div>
       `;
+      el.querySelectorAll('.decision-btn').forEach(btn => {
+        btn.onclick = () => {
+          registrarCliqueFluxo(etapa, btn.textContent, btn.dataset.proximo);
+          atualizarRelatorio();
+          renderFluxo(btn.dataset.proximo);
+        };
+      });
     }
 
     Object.assign(fluxos['Serviços'].B2B, {
       inicio: {
-        pergunta: 'Qual dessas falas o lead trouxe?',
+        pergunta: 'Cara, vou ser bem direto contigo pra não te tomar tempo — não é ligação aleatória. Como vocês fazem o trabalho de divulgação?\n\nQual dessas falas o lead trouxe?',
         opcoes: [
           { texto: 'Não preciso de mais demanda', proximo: 'sv_d_inicio' },
           { texto: 'Lead de internet não fecha', proximo: 'sv_l_inicio' },
@@ -3366,7 +3505,7 @@
 
     Object.assign(fluxos['Imobiliária'].B2B, {
       inicio: {
-        pergunta: 'Qual dessas falas o lead trouxe?',
+        pergunta: 'Cara, vou ser bem direto contigo pra não te tomar tempo — não é ligação aleatória. Como vocês fazem o trabalho de divulgação?\n\nQual dessas falas o lead trouxe?',
         opcoes: [
           { texto: 'Lead ruim', proximo: 'im_l_inicio' },
           { texto: 'Lead vem, corretor não atende', proximo: 'im_c_inicio' },
@@ -3544,7 +3683,7 @@
     // ===== FLUXO COMPLETO PEDIDO PELO USUÁRIO: CLÍNICA / SAÚDE > B2B =====
     Object.assign(fluxos['Clínica / Saúde'].B2B, {
       inicio: {
-        pergunta: 'Qual dessas falas o lead trouxe?',
+        pergunta: 'Cara, vou ser bem direto contigo pra não te tomar tempo — não é ligação aleatória. Como vocês fazem o trabalho de divulgação?\n\nQual dessas falas o lead trouxe?',
         opcoes: [
           { texto: 'Não quero banalizar meu serviço', proximo: 'cs_bz_inicio' },
           { texto: 'Meu público é diferente', proximo: 'cs_pd_inicio' },
@@ -3761,7 +3900,7 @@
 
     Object.assign(fluxos['Indústria / Distribuição'].B2B, {
       inicio: {
-        pergunta: 'Qual dessas falas o lead trouxe?',
+        pergunta: 'Cara, vou ser bem direto contigo pra não te tomar tempo — não é ligação aleatória. Como vocês fazem o trabalho de divulgação?\n\nQual dessas falas o lead trouxe?',
         opcoes: [
           { texto: 'Isso não funciona no meu mercado', proximo: 'id_m_inicio' },
           { texto: 'Meu cliente não está na internet', proximo: 'id_i_inicio' },
@@ -3976,6 +4115,117 @@
       id_ag_4: { resultado: 'Micro fechamento', texto: 'Fechado. Só te deixo um ponto: presença institucional não é a mesma coisa que pipeline previsível. Depois te mostro isso em 2 minutos.' }
     });
 
+
+    // ===== FLUXO COMPLETO PEDIDO PELO USUÁRIO: RESTAURANTES > B2B =====
+    playbook['Restaurantes'].B2B = [
+      { leadResponse: 'Aqui já enche', leitura: 'Tem validação de demanda, mas pode faltar distribuição ao longo do dia e eficiência por hora.', objetivo: 'Mostrar que crescer pode significar distribuir melhor a demanda e aumentar faturamento por cliente.', script: ['Top. E isso acontece o dia inteiro ou mais concentrado em horários específicos?'] },
+      { leadResponse: 'Meu foco é manter qualidade, não crescer', leitura: 'Associa crescimento a perda de padrão operacional.', objetivo: 'Separar crescimento desorganizado de crescimento com controle.', script: ['Perfeito. E crescer hoje significa perder qualidade… ou você nunca estruturou crescimento com controle?'] },
+      { leadResponse: 'Já tenho agência', leitura: 'Existe marketing rodando, mas pode faltar conexão direta com movimento real e faturamento.', objetivo: 'Conectar presença e campanhas com ocupação, fluxo e caixa.', script: ['Perfeito. E hoje ela te ajuda a encher fora do pico ou mais a manter presença?'] },
+      { leadResponse: 'Já estou satisfeito com o faturamento', leitura: 'Está confortável com o volume atual, mas pode estar deixando margem e eficiência na mesa.', objetivo: 'Virar a conversa de volume para margem, ticket médio e recorrência.', script: ['Perfeito. E esse faturamento vem com margem saudável ou ainda tem custo escondido aí?'] }
+    ];
+
+    Object.assign(fluxos['Restaurantes'].B2B, {
+      inicio: {
+        pergunta: 'Cara, vou ser bem direto contigo pra não te tomar tempo — não é ligação aleatória. Como vocês fazem o trabalho de divulgação?\n\nQual dessas falas o lead trouxe?',
+        opcoes: [
+          { texto: 'Aqui já enche', proximo: 'res_inicio_1' },
+          { texto: 'Meu foco é manter qualidade, não crescer', proximo: 'res_inicio_2' },
+          { texto: 'Já tenho agência', proximo: 'res_inicio_3' },
+          { texto: 'Já estou satisfeito com o faturamento', proximo: 'res_inicio_4' }
+        ]
+      },
+
+      res_inicio_1: {
+        pergunta: 'Top. E isso acontece o dia inteiro ou mais concentrado em horários específicos?',
+        opcoes: [
+          { texto: 'Mais no horário de pico', proximo: 'res_1_1' },
+          { texto: 'O dia todo', proximo: 'res_1_2' },
+          { texto: 'Depende do dia', proximo: 'res_1_3' },
+          { texto: 'Mais ou menos', proximo: 'res_1_4' }
+        ]
+      },
+      res_1_1: {
+        pergunta: 'E fora do pico, você sente que poderia estar mais cheio?',
+        opcoes: [
+          { texto: 'Sim', proximo: 'res_1_1_a' },
+          { texto: 'Não, o movimento está bom', proximo: 'res_1_1_b' },
+          { texto: 'Mais ou menos', proximo: 'res_1_1_c' },
+          { texto: 'Nunca parei pra ver', proximo: 'res_1_1_d' }
+        ]
+      },
+      res_1_1_a: { resultado: 'Necessidade', texto: 'Então o jogo não é atrair mais cliente… é distribuir melhor a demanda ao longo do dia.' },
+      res_1_1_b: {
+        pergunta: 'Esse “bom” você mede por sensação ou você tem número claro de ocupação e faturamento por hora?',
+        opcoes: [
+          { texto: 'Tenho número', proximo: 'res_1_1_b1' },
+          { texto: 'Mais sensação', proximo: 'res_1_1_b2' },
+          { texto: 'Nunca medi', proximo: 'res_1_1_b2' },
+          { texto: 'Depende', proximo: 'res_1_1_b3' }
+        ]
+      },
+      res_1_1_b1: { resultado: 'Virada', texto: 'Então o crescimento não está em trazer mais gente… está em extrair mais valor de quem já entra, certo?' },
+      res_1_1_b2: { resultado: 'Necessidade', texto: 'Então faz sentido olhar pra faturamento por cliente e por hora, não só movimento.' },
+      res_1_1_b3: { resultado: 'Problema', texto: 'Então pode estar operando bem… mas sem clareza de onde está deixando dinheiro.' },
+      res_1_1_c: { resultado: 'Necessidade', texto: 'Então dá pra criar demanda específica pra horário vazio.' },
+      res_1_1_d: { resultado: 'Necessidade', texto: 'Então faz sentido transformar isso em número e controle.' },
+      res_1_2: {
+        pergunta: 'E você sente que está no limite da operação ou ainda tem capacidade pra atender mais?',
+        opcoes: [
+          { texto: 'Tem espaço', proximo: 'res_1_2_a' },
+          { texto: 'Tá no limite', proximo: 'res_1_2_b' },
+          { texto: 'Mais ou menos', proximo: 'res_1_2_c' },
+          { texto: 'Depende', proximo: 'res_1_2_d' }
+        ]
+      },
+      res_1_2_a: { resultado: 'Necessidade', texto: 'Então dá pra crescer faturamento sem mudar estrutura — só ajustando aquisição e estímulo.' },
+      res_1_2_b: { resultado: 'Necessidade', texto: 'Então o jogo passa a ser ticket médio e experiência de consumo.' },
+      res_1_2_c: { resultado: 'Problema', texto: 'Então existe fluxo constante… mas ainda não no máximo da operação.' },
+      res_1_2_d: { resultado: 'Problema', texto: 'Então existe movimento, mas ainda sem leitura firme da capacidade real.' },
+      res_1_3: { resultado: 'Necessidade', texto: 'Então dá pra estabilizar o movimento e tirar essa dependência.' },
+      res_1_4: { resultado: 'Necessidade', texto: 'Então dá pra transformar isso em previsibilidade.' },
+
+      res_inicio_2: {
+        pergunta: 'Perfeito. E crescer hoje significa perder qualidade… ou você nunca estruturou crescimento com controle?',
+        opcoes: [
+          { texto: 'Perde qualidade', proximo: 'res_2_a' },
+          { texto: 'Nunca estruturei', proximo: 'res_2_b' },
+          { texto: 'Mais ou menos', proximo: 'res_2_c' },
+          { texto: 'Depende', proximo: 'res_2_d' }
+        ]
+      },
+      res_2_a: { resultado: 'Virada', texto: 'Então o problema não é crescer… é crescer sem processo. Então dá pra crescer mantendo qualidade, desde que o crescimento seja previsível e controlado.' },
+      res_2_b: { resultado: 'Necessidade', texto: 'Então existe crescimento possível sem bagunçar operação.' },
+      res_2_c: { resultado: 'Problema', texto: 'Então talvez a resistência seja ao crescimento desorganizado, não ao crescimento em si.' },
+      res_2_d: { resultado: 'Problema', texto: 'Então falta separar risco de bagunça de crescimento bem estruturado.' },
+
+      res_inicio_3: {
+        pergunta: 'Perfeito. E hoje ela te ajuda a encher fora do pico ou mais a manter presença?',
+        opcoes: [
+          { texto: 'Mais presença', proximo: 'res_3_a' },
+          { texto: 'Ajuda a encher', proximo: 'res_3_b' },
+          { texto: 'Depende', proximo: 'res_3_c' },
+          { texto: 'Não sei', proximo: 'res_3_d' }
+        ]
+      },
+      res_3_a: { resultado: 'Necessidade', texto: 'Então falta conectar marketing direto com movimento real e faturamento.' },
+      res_3_b: { resultado: 'Necessidade', texto: 'Então dá pra transformar isso em fluxo constante.' },
+      res_3_c: { resultado: 'Problema', texto: 'Se depende, ainda não é máquina.' },
+      res_3_d: { resultado: 'Problema', texto: 'Então talvez exista presença, mas sem clareza de quanto isso realmente movimenta a casa.' },
+
+      res_inicio_4: {
+        pergunta: 'Perfeito. E esse faturamento vem com margem saudável ou ainda tem custo escondido aí?',
+        opcoes: [
+          { texto: 'Tá saudável', proximo: 'res_4_a' },
+          { texto: 'Mais ou menos', proximo: 'res_4_b' },
+          { texto: 'Tem custo alto', proximo: 'res_4_c' },
+          { texto: 'Nunca analisei', proximo: 'res_4_d' }
+        ]
+      },
+      res_4_a: { resultado: 'Necessidade', texto: 'Então o jogo vira eficiência: ticket médio e recorrência.' },
+      res_4_b: { resultado: 'Problema', texto: 'Então talvez o faturamento esteja bom, mas a margem ainda não esteja clara.' },
+      res_4_c: { resultado: 'Necessidade', texto: 'Então o foco passa a ser margem.' },
+      res_4_d: { resultado: 'Problema', texto: 'Então você pode estar satisfeito com o faturamento sem saber o quanto ele realmente sobra.' }
+    });
 
     renderPerfilChips();
     renderSegmentos();
