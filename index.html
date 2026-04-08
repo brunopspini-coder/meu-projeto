@@ -2272,8 +2272,94 @@
       localStorage.setItem(RELATORIO_STORAGE_KEY, JSON.stringify(relatorioCliques));
     }
 
-    function registrarCliqueFluxo(etapaAtual, respostaEscolhida, proximaEtapa) {
-      const node = fluxos[segmentoAtual]?.[perfilAtual]?.[etapaAtual];
+    const LOG_ERRO_STORAGE_KEY = 'sdr_playbook_erros_v1';
+
+    function registrarErroFluxo(contexto) {
+      try {
+        const historico = JSON.parse(localStorage.getItem(LOG_ERRO_STORAGE_KEY) || '[]');
+        historico.push({
+          data: new Date().toLocaleString('pt-BR'),
+          ...contexto
+        });
+        localStorage.setItem(LOG_ERRO_STORAGE_KEY, JSON.stringify(historico.slice(-100)));
+      } catch (e) {
+        console.warn('Falha ao registrar erro do fluxo', e);
+      }
+      console.warn('Fluxo/estrutura inválida:', contexto);
+    }
+
+    function getListaObjecoesSegura(seg = segmentoAtual, perf = perfilAtual) {
+      const lista = playbook?.[seg]?.[perf];
+      if (!Array.isArray(lista) || !lista.length) {
+        registrarErroFluxo({ tipo: 'lista_objecoes_invalida', segmento: seg, perfil: perf });
+        return [];
+      }
+      return lista;
+    }
+
+    function getObjecaoAtualSegura(seg = segmentoAtual, perf = perfilAtual, idx = indiceObjecao) {
+      const lista = getListaObjecoesSegura(seg, perf);
+      if (!lista.length) return null;
+      return lista[((idx % lista.length) + lista.length) % lista.length];
+    }
+
+    function getFluxoSeguro(seg = segmentoAtual, perf = perfilAtual, etapa = 'inicio') {
+      const grupo = fluxos?.[seg]?.[perf];
+      if (!grupo) {
+        registrarErroFluxo({ tipo: 'grupo_fluxo_invalido', segmento: seg, perfil: perf, etapa });
+        return null;
+      }
+      const node = grupo?.[etapa];
+      if (!node) {
+        registrarErroFluxo({ tipo: 'fluxo_nao_encontrado', segmento: seg, perfil: perf, etapa });
+        return null;
+      }
+      return node;
+    }
+
+    function renderFallbackFluxo(etapa, motivo = 'Fluxo não encontrado') {
+      const el = document.getElementById('flowStep');
+      if (!el) return;
+      el.innerHTML = `
+        <div class="mini-label">Erro de fluxo • ${segmentoAtual} • ${perfilAtual}</div>
+        <div class="quote">${motivo}</div>
+        <p style="margin-bottom:16px;">A estrutura visual foi preservada. O sistema bloqueou o erro internamente para evitar travamento.</p>
+        <div class="actions-row">
+          <button class="back-btn" onclick="renderFluxo('inicio')">Ir para o início</button>
+          <button class="copy-btn" onclick="mostrarToast('Verifique a conexão desta objeção com o fluxo.')">Ver aviso</button>
+        </div>
+      `;
+    }
+
+    function validarPlaybookInterno() {
+      const inconsistencias = [];
+      Object.keys(playbook || {}).forEach(segmento => {
+        ['B2B', 'B2C'].forEach(perfil => {
+          const lista = playbook?.[segmento]?.[perfil];
+          const mapaFluxos = fluxos?.[segmento]?.[perfil];
+          if (!Array.isArray(lista) || !mapaFluxos) {
+            inconsistencias.push({ segmento, perfil, tipo: 'estrutura_base_ausente' });
+            return;
+          }
+          lista.forEach(item => {
+            if (!item?.leadResponse) {
+              inconsistencias.push({ segmento, perfil, tipo: 'objeção_sem_leadResponse' });
+            }
+            if (item?.proximo && !mapaFluxos?.[item.proximo]) {
+              inconsistencias.push({ segmento, perfil, tipo: 'proximo_inexistente', leadResponse: item.leadResponse, proximo: item.proximo });
+            }
+          });
+        });
+      });
+      if (inconsistencias.length) {
+        console.warn('Validação interna do playbook encontrou pontos de atenção:', inconsistencias);
+      }
+      return inconsistencias;
+    }
+
+
+        function registrarCliqueFluxo(etapaAtual, respostaEscolhida, proximaEtapa) {
+      const node = getFluxoSeguro(segmentoAtual, perfilAtual, etapaAtual) || {};
       relatorioCliques.push({
         tipo: 'clique',
         data: new Date().toLocaleString('pt-BR'),
@@ -2287,8 +2373,8 @@
       salvarRelatorio();
     }
 
-    function registrarResultadoFluxo(etapaAtual) {
-      const node = fluxos[segmentoAtual]?.[perfilAtual]?.[etapaAtual];
+        function registrarResultadoFluxo(etapaAtual) {
+      const node = getFluxoSeguro(segmentoAtual, perfilAtual, etapaAtual);
       if (!node || !node.resultado) return;
       const ultimo = relatorioCliques[relatorioCliques.length - 1];
       if (ultimo && ultimo.tipo === 'resultado' && ultimo.segmento === segmentoAtual && ultimo.perfil === perfilAtual && ultimo.etapa === etapaAtual) return;
@@ -2348,32 +2434,42 @@
       document.getElementById('flowPerfilChips').innerHTML = html;
     }
 
-    function renderSegmentos() {
-      const segmentos = Object.keys(playbook);
-      document.getElementById('segmentList').innerHTML = segmentos.map(seg => `
+        function renderSegmentos() {
+      const segmentos = Object.keys(playbook || {});
+      document.getElementById('segmentList').innerHTML = segmentos.map(seg => {
+        const quantidade = getListaObjecoesSegura(seg, perfilAtual).length;
+        return `
         <div class="segment-item ${segmentoAtual === seg ? 'active' : ''}" onclick="trocarSegmento('${seg}')">
           <strong>${seg}</strong>
-          <small>${playbook[seg][perfilAtual].length} objeções mapeadas</small>
+          <small>${quantidade} objeções mapeadas</small>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
-    function renderObjecao() {
-      const lista = playbook[segmentoAtual][perfilAtual];
-      const item = lista[indiceObjecao % lista.length];
+        function renderObjecao() {
+      const item = getObjecaoAtualSegura();
+      if (!item) {
+        document.getElementById('obTag').innerText = `${segmentoAtual} • ${perfilAtual}`;
+        document.getElementById('obLeadResponse').innerText = 'Nenhuma objeção encontrada';
+        document.getElementById('obLeitura').innerText = 'Verifique a estrutura interna deste segmento.';
+        document.getElementById('obObjetivo').innerText = 'Restaurar a conexão de dados sem alterar o layout.';
+        document.getElementById('scriptBox').innerHTML = '<div class="script-line"><span class="script-num">!</span><div>Sem script disponível para este contexto.</div></div>';
+        return;
+      }
       document.getElementById('obTag').innerText = `${segmentoAtual} • ${perfilAtual}`;
-      document.getElementById('obLeadResponse').innerText = item.leadResponse;
-      document.getElementById('obLeitura').innerText = item.leitura;
-      document.getElementById('obObjetivo').innerText = item.objetivo;
-      document.getElementById('scriptBox').innerHTML = item.script.map((linha, i) => `
+      document.getElementById('obLeadResponse').innerText = item.leadResponse || 'Objeção sem título';
+      document.getElementById('obLeitura').innerText = item.leitura || '';
+      document.getElementById('obObjetivo').innerText = item.objetivo || '';
+      document.getElementById('scriptBox').innerHTML = (item.script || []).map((linha, i) => `
         <div class="script-line"><span class="script-num">${i + 1}</span><div>${linha}</div></div>
-      `).join('');
+      `).join('') || '<div class="script-line"><span class="script-num">!</span><div>Sem script disponível.</div></div>';
     }
 
 
-    function chaveFluxoDaObjecaoAtual() {
-      const lista = playbook[segmentoAtual][perfilAtual];
-      const item = lista[indiceObjecao % lista.length];
+        function chaveFluxoDaObjecaoAtual() {
+      const item = getObjecaoAtualSegura();
+      if (!item) return 'inicio';
       if (segmentoAtual === 'Varejo' && perfilAtual === 'B2B') {
         const mapa = {
           'Já vendo bem no boca a boca': 'bb_inicio',
@@ -2434,7 +2530,7 @@
         };
         return mapa[item.leadResponse] || 'inicio';
       }
-      const fluxoInicio = fluxos[segmentoAtual]?.[perfilAtual]?.inicio;
+      const fluxoInicio = getFluxoSeguro(segmentoAtual, perfilAtual, 'inicio');
       if (item?.proximo) return item.proximo;
       if (fluxoInicio?.opcoes?.length) {
         const opcao = fluxoInicio.opcoes.find(op => op.texto === item.leadResponse);
@@ -2897,7 +2993,7 @@
       atualizarRelatorio();
     }
 
-    function trocarSegmento(segmento) {
+        function trocarSegmento(segmento) {
       segmentoAtual = segmento;
       indiceObjecao = 0;
       renderSegmentos();
@@ -2905,14 +3001,22 @@
       renderFluxo('inicio');
     }
 
-    function proximaObjecao() {
+        function proximaObjecao() {
+      const lista = getListaObjecoesSegura();
+      if (!lista.length) {
+        mostrarToast('Nenhuma objeção encontrada neste perfil');
+        return;
+      }
       indiceObjecao++;
       renderObjecao();
     }
 
-    function copiarScriptAtual() {
-      const lista = playbook[segmentoAtual][perfilAtual];
-      const item = lista[indiceObjecao % lista.length];
+        function copiarScriptAtual() {
+      const item = getObjecaoAtualSegura();
+      if (!item || !Array.isArray(item.script) || !item.script.length) {
+        mostrarToast('Script indisponível');
+        return;
+      }
       navigator.clipboard.writeText(item.script.join(' ')).then(() => mostrarToast('Script copiado'));
     }
 
@@ -2938,10 +3042,13 @@
       navigator.clipboard.writeText(texto).then(() => mostrarToast('Resposta copiada'));
     }
 
-    function renderFluxo(etapa) {
-      const node = fluxos[segmentoAtual][perfilAtual][etapa];
+        function renderFluxo(etapa) {
+      const node = getFluxoSeguro(segmentoAtual, perfilAtual, etapa);
       const el = document.getElementById('flowStep');
-      if (!node) return;
+      if (!node) {
+        renderFallbackFluxo(etapa);
+        return;
+      }
       if (node.resultado) {
         registrarResultadoFluxo(etapa);
         atualizarRelatorio();
@@ -2957,11 +3064,16 @@
         if (btn) btn.onclick = () => copiarTexto(node.texto);
         return;
       }
+      const opcoes = Array.isArray(node.opcoes) ? node.opcoes.filter(op => op && op.texto && op.proximo) : [];
+      if (!opcoes.length) {
+        renderFallbackFluxo(etapa, 'Fluxo sem opções válidas');
+        return;
+      }
       el.innerHTML = `
         <div class="mini-label">Próxima pergunta • ${segmentoAtual} • ${perfilAtual}</div>
-        <div class="quote">${node.pergunta}</div>
+        <div class="quote">${node.pergunta || 'Pergunta não configurada'}</div>
         <div class="decision-row">
-          ${node.opcoes.map(op => `<button class="decision-btn" data-atual="${etapa}" data-proximo="${op.proximo}">${op.texto}</button>`).join('')}
+          ${opcoes.map(op => `<button class="decision-btn" data-atual="${etapa}" data-proximo="${op.proximo}">${op.texto}</button>`).join('')}
         </div>
       `;
       el.querySelectorAll('.decision-btn').forEach(btn => {
@@ -3908,6 +4020,7 @@
     renderSegmentos();
     renderObjecao();
     renderRapidas();
+    validarPlaybookInterno();
     renderFluxo('inicio');
   </script>
 </body>
